@@ -50,9 +50,23 @@ if (parsed.data.NODE_ENV === 'production') {
   const required = ['MONGODB_URI', 'JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET', 'COOKIE_SECRET', 'ENCRYPTION_KEY', 'CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'];
   const missing = required.filter((key) => !process.env[key]);
   if (parsed.data.AI_PROVIDER === 'gemini' && !parsed.data.GEMINI_API_KEY) missing.push('GEMINI_API_KEY');
-  if (parsed.data.PAYMENT_PROVIDER !== 'cashfree') missing.push('PAYMENT_PROVIDER=cashfree');
-  if (parsed.data.CASHFREE_ENVIRONMENT !== 'production') missing.push('CASHFREE_ENVIRONMENT=production');
-  for (const key of ['CASHFREE_APP_ID', 'CASHFREE_SECRET_KEY', 'CASHFREE_WEBHOOK_URL']) if (!parsed.data[key]) missing.push(key);
+
+  if (parsed.data.PAYMENT_PROVIDER !== 'cashfree') {
+    missing.push('PAYMENT_PROVIDER=cashfree');
+  }
+
+  if (!['sandbox', 'production'].includes(parsed.data.CASHFREE_ENVIRONMENT)) {
+    missing.push('CASHFREE_ENVIRONMENT');
+  }
+
+  for (const key of [
+    'CASHFREE_APP_ID',
+    'CASHFREE_SECRET_KEY',
+    'CASHFREE_WEBHOOK_URL'
+  ]) {
+    if (!parsed.data[key]) missing.push(key);
+  }
+
   if (missing.length) throw new Error(`Missing production environment variables: ${missing.join(', ')}`);
 }
 
