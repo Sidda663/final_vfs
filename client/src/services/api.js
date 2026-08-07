@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export function resolveApiBaseUrl({ isDevelopment = import.meta.env.DEV, configuredUrl = import.meta.env.VITE_API_URL } = {}) {
   if (!isDevelopment) return '/api/v1';
-  return configuredUrl || 'http://localhost:5000/api/v1';
+  return configuredUrl || 'https://final-vfs-api.onrender.com/api/v1';
 }
 
 export const api = axios.create({ baseURL: resolveApiBaseUrl(), withCredentials: true, headers: { Accept: 'application/json' } });
